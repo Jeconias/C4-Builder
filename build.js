@@ -70,7 +70,7 @@ const generateTree = async (dir, options) => {
             tree.push(item);
         }
 
-        let files = fs.readdirSync(dir).filter((x) => x.charAt(0) !== '_');
+        let files = fs.readdirSync(dir).filter((x) => x.charAt(0) !== '__');
         for (const file of files) {
             //if folder
             if (fs.statSync(path.join(dir, file)).isDirectory()) {
