@@ -637,27 +637,29 @@ const generatePDF = async (tree, options, onProgress) => {
 };
 
 const generateWebMD = async (tree, options) => {
-    const hasExcludeSidebarFolderByPath = Array.isArray(options.EXCLUDE_SIDEBAR_FOLDER_BY_PATH);
     let filePromises = [];
     let docsifySideBar = '';
 
+    const isExcluded = (dir) => {
+        if (!Array.isArray(options.EXCLUDE_SIDEBAR_FOLDER_BY_PATH)) return false;
+
+        return options.EXCLUDE_SIDEBAR_FOLDER_BY_PATH.find((pathToExclude) => {
+            const isString = typeof pathToExclude === 'string';
+
+            if (isString) return dir.startsWith(pathToExclude);
+
+            return false;
+        });
+    };
+
+    const getWebFileName = (originalFileName) => options.WEB_FILE_NAME || originalFileName;
+
     for (const item of tree) {
         //sidebar
-        const isExcluded = (dir) => {
-            if (!hasExcludeSidebarFolderByPath) return false;
-
-            return options.EXCLUDE_SIDEBAR_FOLDER_BY_PATH.find((pathToExclude) => {
-                const isString = typeof pathToExclude === 'string';
-
-                if (isString) return dir.startsWith(pathToExclude);
-
-                return false;
-            });
-        };
 
         if (!isExcluded(item.dir)) {
             docsifySideBar += `${'  '.repeat(item.level - 1)}* [${item.name}](${encodeURIPath(
-                path.join(...path.join(item.dir).split(path.sep).splice(1), options.WEB_FILE_NAME)
+                path.join(...path.join(item.dir).split(path.sep).splice(1), getWebFileName(item.name))
             )})\n`;
         }
         let name = getFolderName(item.dir, options.ROOT_FOLDER, options.HOMEPAGE_NAME);
@@ -720,7 +722,7 @@ const generateWebMD = async (tree, options) => {
                 path.join(
                     options.DIST_FOLDER,
                     item.dir.replace(options.ROOT_FOLDER, ''),
-                    `${options.WEB_FILE_NAME}.md`
+                    `${getWebFileName(item.name)}.md`
                 ),
                 MD
             )
@@ -731,6 +733,8 @@ const generateWebMD = async (tree, options) => {
         docsifyTemplate = require(path.join(process.cwd(), options.DOCSIFY_TEMPLATE));
     }
 
+    const getRootName = () => tree.find((item) => !item.parent);
+
     //docsify homepage
     filePromises.push(
         writeFile(
@@ -740,7 +744,7 @@ const generateWebMD = async (tree, options) => {
                 repo: options.REPO_NAME,
                 loadSidebar: true,
                 auto2top: true,
-                homepage: `${options.WEB_FILE_NAME}.md`,
+                homepage: `${options.WEB_FILE_NAME || getRootName().name}.md`,
                 plantuml: {
                     skin: 'classic'
                 },
