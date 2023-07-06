@@ -108,6 +108,7 @@ Replace diagrams with a link: ${
             ? chalk.green(currentConfiguration.INCLUDE_LINK_TO_DIAGRAM)
             : chalk.red('not set')
     }
+Exclude title of web file: ${chalk.green(Boolean(currentConfiguration.EXCLUDE_TITLE_OF_WEB_FILE))}
 Exclude sidebar folder by path: ${
         Array.isArray(currentConfiguration.EXCLUDE_SIDEBAR_FOLDER_BY_PATH)
             ? chalk.green(currentConfiguration.EXCLUDE_SIDEBAR_FOLDER_BY_PATH)

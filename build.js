@@ -664,8 +664,11 @@ const generateWebMD = async (tree, options) => {
         }
         let name = getFolderName(item.dir, options.ROOT_FOLDER, options.HOMEPAGE_NAME);
 
-        //title
-        let MD = `# ${name}`;
+        let MD = '';
+        if (!options.EXCLUDE_TITLE_OF_WEB_FILE) {
+            //title
+            MD += `# ${name}`;
+        }
 
         //concatenate markdown files
         MD = await compileDocument(MD, item, options, async (item, pumlFile, options) => {

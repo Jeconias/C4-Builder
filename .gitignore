@@ -1,6 +1,8 @@
 node_modules
 template/docs/
 template/.c4builder
+yarn.lock
+.c4builder
 
 #intellij
 .idea
