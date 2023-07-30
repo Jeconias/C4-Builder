@@ -44,6 +44,7 @@ const getOptions = (conf) => {
         INCLUDE_LINK_TO_DIAGRAM: conf.get('includeLinkToDiagram'),
         EXCLUDE_TITLE_OF_WEB_FILE: conf.get('excludeTitleOfWebFile'),
         EXCLUDE_SIDEBAR_FOLDER_BY_PATH: conf.get('excludeSidebarFolderByPath'),
+        EXCLUDE_DIAGRAMS_ON_WEB_FILE: conf.get('excludeDiagramsOnWebFile') || false,
         PDF_CSS: conf.get('pdfCss') || path.join(__dirname, 'pdf.css'),
         DIAGRAMS_ON_TOP: conf.get('diagramsOnTop'),
         CHARSET: conf.get('charset'),

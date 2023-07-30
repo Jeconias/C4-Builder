@@ -114,6 +114,11 @@ Exclude sidebar folder by path: ${
             ? chalk.green(currentConfiguration.EXCLUDE_SIDEBAR_FOLDER_BY_PATH)
             : chalk.red('not is an array or not set')
     }
+Exclude diagrams on web file: ${
+        typeof currentConfiguration.EXCLUDE_DIAGRAMS_ON_WEB_FILE === 'boolean'
+            ? chalk.green(currentConfiguration.EXCLUDE_DIAGRAMS_ON_WEB_FILE)
+            : chalk.red('not set')
+    }
 Place diagrams before text: ${
         currentConfiguration.DIAGRAMS_ON_TOP !== undefined
             ? chalk.green(currentConfiguration.DIAGRAMS_ON_TOP)

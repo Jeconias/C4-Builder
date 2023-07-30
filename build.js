@@ -672,10 +672,12 @@ const generateWebMD = async (tree, options) => {
 
         //concatenate markdown files
         MD = await compileDocument(MD, item, options, async (item, pumlFile, options) => {
+            const pumlFileName = path.parse(pumlFile.dir).name;
+
             let diagramUrl = encodeURIPath(
                 path.join(
                     path.dirname(pumlFile.dir),
-                    path.parse(pumlFile.dir).name + `.${pumlFile.isDitaa ? 'png' : options.DIAGRAM_FORMAT}`
+                    pumlFileName + `.${pumlFile.isDitaa ? 'png' : options.DIAGRAM_FORMAT}`
                 )
             );
             if (!options.GENERATE_LOCAL_IMAGES)
@@ -699,23 +701,26 @@ const generateWebMD = async (tree, options) => {
                     ).toString('base64');
                 else imgContent = await httpGet(diagramUrl);
 
-                let diagramImage = `\n![${path.parse(pumlFile.dir).name}](data:${getMime(
+                const diagramImage = `\n![${pumlFileName}](data:${getMime(
                     pumlFile.isDitaa ? 'png' : options.DIAGRAM_FORMAT
                 )};base64,${imgContent})\n`;
 
-                let diagramLink = `[Download ${
-                    path.parse(pumlFile.dir).name
-                } diagram](${diagramUrl} ':ignore')`;
+                const diagramLink = `[Download ${pumlFileName} diagram](${diagramUrl} ':ignore')`;
 
                 return diagramImage + diagramLink;
             } else {
-                let diagramImage = `![diagram](${diagramUrl})`;
-                let diagramLink = `[Go to ${path.parse(pumlFile.dir).name} diagram](${diagramUrl})`;
-                if (!options.INCLUDE_LINK_TO_DIAGRAM)
+                if (options.EXCLUDE_DIAGRAMS_ON_WEB_FILE) return '';
+
+                const diagramImage = `![${pumlFileName}](${diagramUrl})`;
+                const diagramLink = `[Go to ${pumlFileName} diagram](${diagramUrl})`;
+
+                if (!options.INCLUDE_LINK_TO_DIAGRAM) {
                     //img
                     return diagramImage;
+                }
+
                 //link
-                else return diagramLink;
+                return diagramLink;
             }
         });
 
